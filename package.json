@@ -1,0 +1,20 @@
+{
+  "name": "ts-starter",
+  "version": "1.0.0",
+  "description": "typescriptプロジェクトのオリジナル初期設定",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YadaYuki/ts-starter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YadaYuki/ts-starter/issues"
+  },
+  "homepage": "https://github.com/YadaYuki/ts-starter#readme"
+}
