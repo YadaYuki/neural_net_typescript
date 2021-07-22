@@ -2,10 +2,11 @@
   "name": "ts-starter",
   "version": "1.0.0",
   "description": "typescriptプロジェクトのオリジナル初期設定",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "":""
+    "dev": "ts-node src/index.ts",
+    "dev:watch": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc -p .",
+    "clean": "rm -rf dist"
   },
   "repository": {
     "type": "git",
