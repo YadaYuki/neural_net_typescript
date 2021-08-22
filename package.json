@@ -23,6 +23,7 @@
   "homepage": "https://github.com/YadaYuki/ts-starter#readme",
   "devDependencies": {
     "@types/node": "^16.4.0",
+    "@types/node-fetch": "^2.5.12",
     "@types/numjs": "^0.16.1",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
@@ -35,6 +36,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "node-fetch": "^2.6.1",
     "numjs": "https://github.com/nicolaspanel/numjs"
   }
 }
