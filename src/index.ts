@@ -1,2 +1,3 @@
-const helloWorld = 'helloWorld';
-console.log(helloWorld);
+import { loadMnist } from './data/load-mnist';
+
+loadMnist();
