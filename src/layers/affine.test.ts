@@ -60,4 +60,18 @@ describe('Affine Layer Test', () => {
       ]);
     });
   });
+  describe('Affine.backward', () => {
+    test('backward ', () => {
+      const affine = new Affine(
+        nj.array([
+          [3, 3, 3],
+          [3, 3, 3],
+          [3, 3, 3],
+        ]),
+        nj.array([1, 1, 1])
+      );
+      affine.backward(nj.array([3, 3, 3]));
+      expect(affine.db.tolist()).toEqual([3, 3, 3]);
+    });
+  });
 });

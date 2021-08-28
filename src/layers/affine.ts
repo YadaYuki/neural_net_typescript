@@ -8,20 +8,30 @@ export class Affine implements Layer {
   db: nj.NdArray<number>;
   x: nj.NdArray<number>;
   xBatch: nj.NdArray<number[]>;
-  constructor(W: nj.NdArray<number[]>, b: nj.NdArray<number>) {
+
+  constructor(
+    W: nj.NdArray<number[]>,
+    b: nj.NdArray<number>,
+    x?: nj.NdArray<number>,
+    xBatch?: nj.NdArray<number[]>
+  ) {
     this.W = W;
     this.b = b;
     this.dW = nj.zeros(0);
     this.db = nj.zeros(0);
-    this.x = nj.zeros(0);
-    this.xBatch = nj.zeros(0);
+    this.x = x == null ? nj.zeros(0) : x;
+    this.xBatch = xBatch == null ? nj.zeros(0) : xBatch;
   }
+
   forward(x: nj.NdArray<number>): nj.NdArray<number> {
+    this.x = x;
     const xMat = x.reshape(1, x.size) as nj.NdArray<number[]>;
     const bMat = this.b.reshape(1, this.b.size) as nj.NdArray<number[]>;
     return nj.add(nj.dot(xMat, this.W), bMat).flatten();
   }
+
   forwardBatch(xBatch: nj.NdArray<number[]>): nj.NdArray<number[]> {
+    this.xBatch = xBatch;
     const batchSize = xBatch.shape[0];
     const bMat = this.b.reshape(1, this.b.size) as nj.NdArray<number[]>;
     const ones = nj.ones(batchSize).reshape(batchSize, 1) as nj.NdArray<
@@ -31,8 +41,9 @@ export class Affine implements Layer {
     return nj.dot(xBatch, this.W).add(bMatAdd);
   }
 
-  backward(): void {
-    1 + 1;
+  backward(dout: nj.NdArray<number>): nj.NdArray<number[]> {
+    this.db = dout;
+    return nj.zeros(0);
   }
   backwardBatch(): void {
     1 + 1;
