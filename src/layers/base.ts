@@ -1,4 +1,3 @@
-import nj from 'numjs';
 /*
 
 */
