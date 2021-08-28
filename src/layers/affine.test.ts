@@ -38,4 +38,26 @@ describe('Affine Layer Test', () => {
       expect(affine.forward(x).tolist()).toEqual([25, 25, 25]);
     });
   });
+  describe('Affine.forwardBatch', () => {
+    test('forwardBatch x=[[5,2,1],[5,2,1],[5,2,1]] W = [[3,3,3,],[3,3,3,],[3,3,3,]],b=[1,1,1] should [[25,25,25],[25,25,25],[25,25,25]]', () => {
+      const affine = new Affine(
+        nj.array([
+          [3, 3, 3],
+          [3, 3, 3],
+          [3, 3, 3],
+        ]),
+        nj.array([1, 1, 1])
+      );
+      const x = nj.array([
+        [5, 2, 1],
+        [5, 2, 1],
+        [5, 2, 1],
+      ]);
+      expect(affine.forwardBatch(x).tolist()).toEqual([
+        [25, 25, 25],
+        [25, 25, 25],
+        [25, 25, 25],
+      ]);
+    });
+  });
 });

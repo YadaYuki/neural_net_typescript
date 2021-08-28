@@ -8,4 +8,4 @@ export const sum = (a: number, b: number): number => {
 
 import nj from 'numjs';
 
-console.log(nj.array([1, 1, 1]).reshape(1, 3).tolist());
+console.log(nj.array([0, -1, 3, 4, 5]).reshape(3, 5));
