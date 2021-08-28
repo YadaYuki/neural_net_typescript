@@ -27,4 +27,10 @@ export class Relu implements Layer {
     const xArray = this.x.tolist();
     return nj.array(xArray.map((x) => Number(x > 0)));
   };
+  backwardBatch = (): nj.NdArray<number[]> => {
+    const xArrayBatch = this.xBatch.tolist();
+    return nj.array(
+      xArrayBatch.map((xArray) => xArray.map((x) => Number(x > 0)))
+    );
+  };
 }
