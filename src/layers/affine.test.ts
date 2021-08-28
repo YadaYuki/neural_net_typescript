@@ -68,10 +68,17 @@ describe('Affine Layer Test', () => {
           [3, 3, 3],
           [3, 3, 3],
         ]),
-        nj.array([1, 1, 1])
+        nj.array([1, 1, 1]),
+        nj.array([1, 2, 3])
       );
-      affine.backward(nj.array([3, 3, 3]));
+      const dx = affine.backward(nj.array([3, 3, 3]));
       expect(affine.db.tolist()).toEqual([3, 3, 3]);
+      expect(affine.dW.tolist()).toEqual([
+        [3, 3, 3],
+        [6, 6, 6],
+        [9, 9, 9],
+      ]);
+      expect(dx.tolist()).toEqual([9, 9, 9]);
     });
   });
 });

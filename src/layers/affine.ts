@@ -43,6 +43,10 @@ export class Affine implements Layer {
 
   backward(dout: nj.NdArray<number>): nj.NdArray<number[]> {
     this.db = dout;
+    this.dW = nj.dot(
+      this.x.reshape(this.x.size, 1) as nj.NdArray<number[]>,
+      this.x.reshape(this.x.size, 1) as nj.NdArray<number[]>
+    );
     return nj.zeros(0);
   }
   backwardBatch(): void {
