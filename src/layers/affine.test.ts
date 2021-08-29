@@ -78,7 +78,43 @@ describe('Affine Layer Test', () => {
         [6, 6, 6],
         [9, 9, 9],
       ]);
-      expect(dx.tolist()).toEqual([9, 9, 9]);
+      expect(dx.tolist()).toEqual([27, 27, 27]);
+    });
+  });
+  describe('Affine.backwardBatch', () => {
+    test('backwardBatch ', () => {
+      const affine = new Affine(
+        nj.array([
+          [1, 3, 3],
+          [3, 5, 3],
+          [1, 6, 9],
+        ]),
+        nj.array([1, 1, 1]),
+        undefined,
+        nj.array([
+          [1, 1, 1],
+          [2, 3, 1],
+          [4, 2, 1],
+        ])
+      );
+      const dx = affine.backwardBatch(
+        nj.array([
+          [1, 4, 3],
+          [4, 2, 6],
+          [3, 2, 5],
+        ])
+      );
+      expect(affine.db.tolist()).toEqual([8, 8, 14]);
+      expect(affine.dW.tolist()).toEqual([
+        [21, 16, 35],
+        [19, 14, 31],
+        [8, 8, 14],
+      ]);
+      expect(dx.tolist()).toEqual([
+        [22, 32, 52],
+        [28, 40, 70],
+        [24, 34, 60],
+      ]);
     });
   });
 });

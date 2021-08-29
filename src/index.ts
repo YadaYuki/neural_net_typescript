@@ -1,6 +1,6 @@
 // import { loadMnist } from './data/load-mnist';
 
-// loadMnist();
+/* TODO:implement MatrixType ... 全ての長さが同じ配列 */
 
 export const sum = (a: number, b: number): number => {
   return a + b;
