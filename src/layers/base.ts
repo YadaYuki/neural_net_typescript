@@ -6,4 +6,8 @@ export interface Layer {
   forward(...arg: any): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   backward(...arg: any): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  forwardBatch(...arg: any): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  backwardBatch(...arg: any): void;
 }
