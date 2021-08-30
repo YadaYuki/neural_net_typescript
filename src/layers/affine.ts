@@ -1,8 +1,6 @@
 import { Layer } from './base';
 import nj from 'numjs';
 
-/* TODO:implement matrix */
-
 export class Affine implements Layer {
   W: nj.NdArray<number[]>;
   b: nj.NdArray<number>;
