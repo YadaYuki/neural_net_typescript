@@ -5,9 +5,12 @@ export class Relu implements Layer {
   x: nj.NdArray<number>;
   xBatch: nj.NdArray<number[]>;
 
-  constructor(x?: nj.NdArray<number>, xBatch?: nj.NdArray<number[]>) {
-    this.x = x == null ? nj.zeros(0) : x;
-    this.xBatch = xBatch == null ? nj.zeros(0) : xBatch;
+  constructor(
+    x: nj.NdArray<number> = nj.zeros(0),
+    xBatch: nj.NdArray<number[]> = nj.zeros(0)
+  ) {
+    this.x = x;
+    this.xBatch = xBatch;
   }
 
   forward = (x: nj.NdArray<number>): nj.NdArray<number> => {

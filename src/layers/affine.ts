@@ -12,15 +12,15 @@ export class Affine implements Layer {
   constructor(
     W: nj.NdArray<number[]>,
     b: nj.NdArray<number>,
-    x?: nj.NdArray<number>,
-    xBatch?: nj.NdArray<number[]>
+    x: nj.NdArray<number> = nj.zeros(0),
+    xBatch: nj.NdArray<number[]> = nj.zeros(0)
   ) {
     this.W = W;
     this.b = b;
     this.dW = nj.zeros(0);
     this.db = nj.zeros(0);
-    this.x = x == null ? nj.zeros(0) : x;
-    this.xBatch = xBatch == null ? nj.zeros(0) : xBatch;
+    this.x = x;
+    this.xBatch = xBatch;
   }
 
   /*
