@@ -9,3 +9,4 @@ export const sum = (a: number, b: number): number => {
 import nj from 'numjs';
 
 console.log(nj.array([[0, -1, 3, 4, 5]]).T.tolist());
+console.log(nj.random([3, 3]).tolist());
