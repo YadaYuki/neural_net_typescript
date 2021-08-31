@@ -3,6 +3,7 @@ import { Layer } from './layers/base';
 import { Affine } from './layers/affine';
 import { Relu } from './layers/relu';
 import { SoftmaxWithLoss } from './layers/softmaxWithLoss';
+import { softmax, softmaxBatch } from './utils/activation';
 
 export class TwoLayerNet {
   W1: nj.NdArray<number[]>;
@@ -28,6 +29,22 @@ export class TwoLayerNet {
       new Affine(this.W2, this.b2),
     ];
     this.lossLayer = new SoftmaxWithLoss();
+  }
+
+  predict(x: nj.NdArray<number>): nj.NdArray<number> {
+    let output = x;
+    for (const layer of this.layers) {
+      output = layer.forward(output);
+    }
+    return softmax(output);
+  }
+
+  predictBatch(xBatch: nj.NdArray<number[]>): nj.NdArray<number[]> {
+    let output = xBatch;
+    for (const layer of this.layers) {
+      output = layer.forwardBatch(output);
+    }
+    return softmaxBatch(output);
   }
 
   /* 基本的にはバッチ学習であることを前提とする。 */
