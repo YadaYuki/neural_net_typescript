@@ -63,4 +63,20 @@ export class TwoLayerNet {
       dout = layer.backwardBatch(dout);
     }
   }
+
+  gradient(): {
+    dW1: nj.NdArray<number[]>;
+    db1: nj.NdArray<number>;
+    dW2: nj.NdArray<number[]>;
+    db2: nj.NdArray<number>;
+  } {
+    const affine1 = this.layers[0] as Affine;
+    const affine2 = this.layers[3] as Affine;
+    return {
+      dW1: affine1.dW,
+      db1: affine1.db,
+      dW2: affine2.dW,
+      db2: affine2.db,
+    };
+  }
 }
