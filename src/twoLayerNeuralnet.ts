@@ -40,12 +40,10 @@ export class TwoLayerNet {
     return loss;
   }
   backward(): void {
-    const dout: nj.NdArray<number[]> = this.lossLayer.backwardBatch();
+    let dout: nj.NdArray<number[]> = this.lossLayer.backwardBatch();
     const reversedLayers = this.layers.slice().reverse();
     for (const layer of reversedLayers) {
-      scoreBatch = layer.forwardBatch(scoreBatch);
+      dout = layer.backwardBatch(dout);
     }
-    const loss = this.lossLayer.forwardBatch(scoreBatch, tBatch);
-    return loss;
   }
 }
