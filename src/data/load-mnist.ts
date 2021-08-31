@@ -43,9 +43,20 @@ const _loadLabelData = async (labelFilename: string): Promise<nj.NdArray> => {
   return label;
 };
 
+const labelToOneHot = (labelArr: nj.NdArray): nj.NdArray<number[]> => {
+  const dataNum = labelArr.shape[0];
+  const oneHotMat = nj.zeros(dataNum * 10).reshape(dataNum, 10) as nj.NdArray<
+    number[]
+  >;
+  for (let i = 0; i < dataNum; i++) {
+    oneHotMat.set(i, labelArr.get(i), 1);
+  }
+  return oneHotMat;
+};
+
 const loadLabelData = async (): Promise<{
-  trainLabel: nj.NdArray;
-  testLabel: nj.NdArray;
+  trainLabel: nj.NdArray<number[]>;
+  testLabel: nj.NdArray<number[]>;
 }> => {
   const filenameDict = {
     trainLabelFilename: 'train-labels-idx1-ubyte',
@@ -54,18 +65,22 @@ const loadLabelData = async (): Promise<{
   const trainLabel = await _loadLabelData(filenameDict.trainLabelFilename);
   const testLabel = await _loadLabelData(filenameDict.testLabelFilename);
   return {
-    trainLabel,
-    testLabel,
+    trainLabel: labelToOneHot(trainLabel),
+    testLabel: labelToOneHot(testLabel),
   };
 };
 
-const _loadImageData = async (imgFilename: string): Promise<nj.NdArray> => {
+const _loadImageData = async (
+  imgFilename: string
+): Promise<nj.NdArray<number[]>> => {
   const offset = 16;
   const mnistDataSize = 784; // 28 * 28
   let imgData = fs.readFileSync(path.join(__dirname, 'mnist', imgFilename));
   const dataNum = parseInt(imgData.slice(4, 8).toString('hex'), 16);
   imgData = imgData.slice(offset);
-  const img = nj.array(Array.from(imgData)).reshape(dataNum, mnistDataSize);
+  const img = nj
+    .array(Array.from(imgData))
+    .reshape(dataNum, mnistDataSize) as nj.NdArray<number[]>;
   return img;
 };
 
@@ -73,8 +88,8 @@ const _loadImageData = async (imgFilename: string): Promise<nj.NdArray> => {
 loadImageDataはmnistの画像データを読み込み、784(=28*28)個の要素を持つ一次元のnj.Ndarrayに変換し、それらを値として返す。
 */
 const loadImageData = async (): Promise<{
-  trainImg: nj.NdArray;
-  testImg: nj.NdArray;
+  trainImg: nj.NdArray<number[]>;
+  testImg: nj.NdArray<number[]>;
 }> => {
   const filenameDict = {
     trainImgFilename: 'train-images-idx3-ubyte',
@@ -89,10 +104,10 @@ const loadImageData = async (): Promise<{
 };
 
 export const loadMnist = async (): Promise<{
-  xTrain: nj.NdArray;
-  yTrain: nj.NdArray;
-  xTest: nj.NdArray;
-  yTest: nj.NdArray;
+  xTrain: nj.NdArray<number[]>;
+  yTrain: nj.NdArray<number[]>;
+  xTest: nj.NdArray<number[]>;
+  yTest: nj.NdArray<number[]>;
 }> => {
   const filenameArr = Object.values(keyFiles);
   try {

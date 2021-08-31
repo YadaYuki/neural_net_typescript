@@ -1,1 +1,3 @@
-export const numericalGradient = () => {};
+export const numericalGradient = (x: number[]) => {
+  return 0;
+};
