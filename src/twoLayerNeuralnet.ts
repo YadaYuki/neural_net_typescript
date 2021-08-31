@@ -36,7 +36,16 @@ export class TwoLayerNet {
     for (const layer of this.layers) {
       scoreBatch = layer.forwardBatch(scoreBatch);
     }
-    const loss = this.lossLayer.forward(scoreBatch, tBatch);
+    const loss = this.lossLayer.forwardBatch(scoreBatch, tBatch);
+    return loss;
+  }
+  backward(): void {
+    const dout: nj.NdArray<number[]> = this.lossLayer.backwardBatch();
+    const reversedLayers = this.layers.slice().reverse();
+    for (const layer of reversedLayers) {
+      scoreBatch = layer.forwardBatch(scoreBatch);
+    }
+    const loss = this.lossLayer.forwardBatch(scoreBatch, tBatch);
     return loss;
   }
 }

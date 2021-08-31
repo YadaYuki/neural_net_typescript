@@ -2,42 +2,36 @@ import { Layer } from './base';
 import nj from 'numjs';
 
 export class Relu implements Layer {
-  x: nj.NdArray<number>;
-  xBatch: nj.NdArray<number[]>;
+  mask: nj.NdArray<number>;
+  maskBatch: nj.NdArray<number[]>;
 
   constructor(
-    x: nj.NdArray<number> = nj.zeros(0),
-    xBatch: nj.NdArray<number[]> = nj.zeros(0)
+    mask: nj.NdArray<number> = nj.zeros(0),
+    maskBatch: nj.NdArray<number[]> = nj.zeros(0)
   ) {
-    this.x = x;
-    this.xBatch = xBatch;
+    this.mask = mask;
+    this.maskBatch = maskBatch;
   }
 
   forward = (x: nj.NdArray<number>): nj.NdArray<number> => {
-    this.x = x;
     const xArray = x.tolist();
-    return nj.array(xArray.map((x) => (x > 0 ? x : 0)));
+    this.mask = nj.array(xArray.map((xItem) => Number(xItem > 0)));
+    return x.multiply(this.mask);
   };
 
   forwardBatch = (xBatch: nj.NdArray<number[]>): nj.NdArray<number[]> => {
-    this.xBatch = xBatch;
-    const xArray = xBatch.tolist();
-    return nj.array(
-      xArray.map((xArr: number[]) => {
-        return xArr.map((x) => (x > 0 ? x : 0));
-      })
-    );
-  };
-
-  backward = (): nj.NdArray<number> => {
-    const xArray = this.x.tolist();
-    return nj.array(xArray.map((x) => Number(x > 0)));
-  };
-
-  backwardBatch = (): nj.NdArray<number[]> => {
-    const xArrayBatch = this.xBatch.tolist();
-    return nj.array(
+    const xArrayBatch = xBatch.tolist();
+    this.maskBatch = nj.array(
       xArrayBatch.map((xArray) => xArray.map((x) => Number(x > 0)))
     );
+    return xBatch.multiply(this.maskBatch);
+  };
+
+  backward = (dout: nj.NdArray<number>): nj.NdArray<number> => {
+    return dout.multiply(this.mask);
+  };
+
+  backwardBatch = (dout: nj.NdArray<number[]>): nj.NdArray<number[]> => {
+    return dout.multiply(this.maskBatch);
   };
 }
