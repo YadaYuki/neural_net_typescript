@@ -71,7 +71,7 @@ export class TwoLayerNet {
     db2: nj.NdArray<number>;
   } {
     const affine1 = this.layers[0] as Affine;
-    const affine2 = this.layers[3] as Affine;
+    const affine2 = this.layers[2] as Affine;
     return {
       dW1: affine1.dW,
       db1: affine1.db,
