@@ -103,7 +103,9 @@ const loadImageData = async (): Promise<{
   };
 };
 
-export const loadMnist = async (): Promise<{
+export const loadMnist = async (
+  normalize = true
+): Promise<{
   xTrain: nj.NdArray<number[]>;
   yTrain: nj.NdArray<number[]>;
   xTest: nj.NdArray<number[]>;
@@ -120,7 +122,11 @@ export const loadMnist = async (): Promise<{
   // load mnist from dir
 
   const { trainLabel, testLabel } = await loadLabelData();
-  const { trainImg, testImg } = await loadImageData();
+  let { trainImg, testImg } = await loadImageData();
+  if (normalize) {
+    trainImg = trainImg.divide(255);
+    testImg = testImg.divide(255);
+  }
   return {
     xTrain: trainImg,
     yTrain: trainLabel,

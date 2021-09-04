@@ -8,7 +8,6 @@ export class Affine implements Layer {
   db: nj.NdArray<number>;
   x: nj.NdArray<number>;
   xBatch: nj.NdArray<number[]>;
-
   constructor(
     W: nj.NdArray<number[]>,
     b: nj.NdArray<number>,

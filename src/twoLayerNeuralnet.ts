@@ -49,7 +49,7 @@ export class TwoLayerNet {
 
   /* 基本的にはバッチ学習であることを前提とする。 */
   forward(xBatch: nj.NdArray<number[]>, tBatch: nj.NdArray<number[]>): number {
-    let scoreBatch: nj.NdArray<number[] | number> = xBatch;
+    let scoreBatch: nj.NdArray<number[]> = xBatch;
     for (const layer of this.layers) {
       scoreBatch = layer.forwardBatch(scoreBatch);
     }
@@ -62,6 +62,17 @@ export class TwoLayerNet {
     for (const layer of reversedLayers) {
       dout = layer.backwardBatch(dout);
     }
+  }
+  update(learningRate = 0.1): void {
+    const { dW1, db1, dW2, db2 } = this.gradient();
+    this.W1 = this.W1.subtract(dW1.multiply(learningRate));
+    this.b1 = this.b1.subtract(db1.multiply(learningRate));
+    this.W2 = this.W2.subtract(dW2.multiply(learningRate));
+    this.b2 = this.b2.subtract(db2.multiply(learningRate));
+    (this.layers[0] as Affine).W = this.W1;
+    (this.layers[0] as Affine).b = this.b1;
+    (this.layers[2] as Affine).W = this.W2;
+    (this.layers[2] as Affine).b = this.b2;
   }
 
   gradient(): {
