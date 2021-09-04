@@ -14,12 +14,12 @@ export class TwoLayerNet {
   lossLayer: Layer;
   constructor(inputSize: number, hiddenSize: number, outputSize: number) {
     this.W1 = nj
-      .random([inputSize * hiddenSize])
+      .ones([inputSize * hiddenSize])
       .multiply(0.01)
       .reshape(inputSize, hiddenSize) as nj.NdArray<number[]>;
     this.b1 = nj.zeros([hiddenSize]);
     this.W2 = nj
-      .random([hiddenSize * outputSize])
+      .ones([hiddenSize * outputSize])
       .multiply(0.01)
       .reshape(hiddenSize, outputSize) as nj.NdArray<number[]>;
     this.b2 = nj.zeros([outputSize]);
