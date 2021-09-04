@@ -28,5 +28,5 @@ export const getBatchData = (
 };
 
 export const maxIdx = (arr: number[]): number => {
-  return arr.reduce((acc, cur, idx, src) => (src[acc] < cur ? idx : acc));
+  return arr.indexOf(arr.reduce((acc, cur) => (acc < cur ? cur : acc)));
 };

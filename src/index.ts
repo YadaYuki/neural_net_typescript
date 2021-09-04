@@ -1,6 +1,6 @@
 import { TwoLayerNet } from './twoLayerNeuralnet';
 import { loadMnist } from './data/load-mnist';
-import { choice, getBatchData } from './utils';
+import { choice, getBatchData, maxIdx } from './utils';
 
 const main = async () => {
   const { xTrain, yTrain, yTest, xTest } = await loadMnist();
@@ -10,8 +10,7 @@ const main = async () => {
   const batchSize = 100;
   const iterNums = 1000;
   const learningRate = 0.1;
-  let prev = Date.now();
-  let now = Date.now();
+  const start = Date.now();
   for (let i = 0; i < iterNums; i++) {
     const batchIdxList = choice(trainNum, batchSize);
     const xBatch = getBatchData(batchIdxList, xTrain);
@@ -21,14 +20,25 @@ const main = async () => {
     network.backward();
     network.update(learningRate);
     if (i % 100 === 0) {
-      now = Date.now();
-      console.log(now - prev);
+      const now = Date.now();
+      console.log(now - start);
       console.log(loss);
-      prev = now;
     }
   }
   const testNum = yTest.shape[0];
   const testBatchIdxList = choice(testNum, 1000); // 1000個のデータで精度を検証する。
+  const xTestBatch = getBatchData(testBatchIdxList, xTest);
+  const yTestBatch = getBatchData(testBatchIdxList, yTest);
+  const yPredict = network.predictBatch(xTestBatch);
+  const yTestBatchList = yTestBatch.tolist();
+  const yPredictList = yPredict.tolist();
+  let accurateNum = 0;
+  yTestBatchList.map((_, idx) => {
+    accurateNum += Number(
+      maxIdx(yTestBatchList[idx]) === maxIdx(yPredictList[idx])
+    );
+  });
+  console.log(`Accuracy for 1000 of  test data : ${accurateNum / 1000} `);
 };
 
 main();
