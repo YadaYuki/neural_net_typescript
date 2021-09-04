@@ -14,12 +14,12 @@ export class TwoLayerNet {
   lossLayer: Layer;
   constructor(inputSize: number, hiddenSize: number, outputSize: number) {
     this.W1 = nj
-      .ones([inputSize * hiddenSize])
+      .random([inputSize * hiddenSize])
       .multiply(0.01)
       .reshape(inputSize, hiddenSize) as nj.NdArray<number[]>;
     this.b1 = nj.zeros([hiddenSize]);
     this.W2 = nj
-      .ones([hiddenSize * outputSize])
+      .random([hiddenSize * outputSize])
       .multiply(0.01)
       .reshape(hiddenSize, outputSize) as nj.NdArray<number[]>;
     this.b2 = nj.zeros([outputSize]);
@@ -62,6 +62,17 @@ export class TwoLayerNet {
     for (const layer of reversedLayers) {
       dout = layer.backwardBatch(dout);
     }
+  }
+  update(learningRate = 0.1): void {
+    const { dW1, db1, dW2, db2 } = this.gradient();
+    this.W1 = this.W1.subtract(dW1.multiply(learningRate));
+    this.b1 = this.b1.subtract(db1.multiply(learningRate));
+    this.W2 = this.W2.subtract(dW2.multiply(learningRate));
+    this.b2 = this.b2.subtract(db2.multiply(learningRate));
+    (this.layers[0] as Affine).W = this.W1;
+    (this.layers[0] as Affine).b = this.b1;
+    (this.layers[2] as Affine).W = this.W2;
+    (this.layers[2] as Affine).b = this.b2;
   }
 
   gradient(): {
