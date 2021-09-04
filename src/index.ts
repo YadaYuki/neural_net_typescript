@@ -31,6 +31,7 @@ const main = async () => {
     const batchIdxList = choice(trainNum, batchSize);
     const xBatch = getBatchData(batchIdxList, xTrain);
     const yBatch = getBatchData(batchIdxList, yTrain);
+
     const loss = network.forward(xBatch, yBatch);
     network.backward();
     const { dW1, db1, dW2, db2 } = network.gradient();

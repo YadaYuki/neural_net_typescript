@@ -46,4 +46,25 @@ describe('SoftmaxWithLoss Layer Test', () => {
       ]);
     });
   });
+  describe('SoftmaxWithLoss.forwardBatch', () => {
+    // forwardに関しては,utils以下のロジックがほとんどであるため、ここでは省略。
+    test('backward', () => {
+      const xBatch = nj.array([
+        [1, 2, 3, 4],
+        [0, 1, 3, 1],
+      ]);
+      const tBatch = nj.array([
+        [0, 0, 0, 1],
+        [0, 0, 1, 0],
+      ]);
+      const softmaxWithLoss = new SoftmaxWithLoss();
+      expect(softmaxWithLoss.forwardBatch(xBatch, tBatch)).toBeCloseTo(
+        0.35908389,
+        7
+      );
+      console.log(
+        `softmaxWithLoss:${softmaxWithLoss.forwardBatch(xBatch, tBatch)}`
+      );
+    });
+  });
 });

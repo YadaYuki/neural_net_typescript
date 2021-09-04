@@ -49,7 +49,7 @@ export class TwoLayerNet {
 
   /* 基本的にはバッチ学習であることを前提とする。 */
   forward(xBatch: nj.NdArray<number[]>, tBatch: nj.NdArray<number[]>): number {
-    let scoreBatch: nj.NdArray<number[] | number> = xBatch;
+    let scoreBatch: nj.NdArray<number[]> = xBatch;
     for (const layer of this.layers) {
       scoreBatch = layer.forwardBatch(scoreBatch);
     }
