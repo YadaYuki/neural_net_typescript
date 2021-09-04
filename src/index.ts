@@ -1,33 +1,9 @@
 import { TwoLayerNet } from './twoLayerNeuralnet';
 import { loadMnist } from './data/load-mnist';
-import nj from 'numjs';
-
-const choice = (max: number, length: number) => {
-  const randArray: number[] = new Array(length).fill(0);
-  return randArray.map((_) => {
-    return Math.floor(Math.random() * max);
-  });
-};
-
-const range = (from: number, to: number, step = 1) => {
-  const arr = [];
-  for (let i = from; i < to; i += step) {
-    arr.push(i);
-  }
-  return arr;
-};
-
-const getBatchData = (idxArr: number[], data: nj.NdArray<number[]>) => {
-  const dataArr = data.tolist();
-  return nj.array(
-    idxArr.map((idx) => {
-      return dataArr[idx];
-    })
-  );
-};
+import { choice, getBatchData } from './utils';
 
 const main = async () => {
-  const { xTrain, yTrain } = await loadMnist();
+  const { xTrain, yTrain, yTest, xTest } = await loadMnist();
 
   const network = new TwoLayerNet(784, 50, 10);
   const trainNum = xTrain.shape[0];
@@ -51,5 +27,8 @@ const main = async () => {
       prev = now;
     }
   }
+  const testNum = yTest.shape[0];
+  const testBatchIdxList = choice(testNum, 1000); // 1000個のデータで精度を検証する。
 };
+
 main();
