@@ -10,21 +10,20 @@ const main = async () => {
   const batchSize = 100;
   const iterNums = 1000;
   const learningRate = 0.1;
-  const start = Date.now();
   for (let i = 0; i < iterNums; i++) {
     const batchIdxList = choice(trainNum, batchSize);
     const xBatch = getBatchData(batchIdxList, xTrain);
     const yBatch = getBatchData(batchIdxList, yTrain);
-
     const loss = network.forward(xBatch, yBatch);
-    network.backward();
-    network.update(learningRate);
+    network.backward(); // 逆伝搬
+    network.update(learningRate); // パラメータの更新
     if (i % 100 === 0) {
-      const now = Date.now();
-      console.log(now - start);
-      console.log(loss);
+      console.log(`iteration: ${i + 1}`);
+      console.log(loss); // 誤差関数の出力結果を表示.
+      console.log();
     }
   }
+  // テストデータを対象に精度を計算する。
   const testNum = yTest.shape[0];
   const testBatchIdxList = choice(testNum, 1000); // 1000個のデータで精度を検証する。
   const xTestBatch = getBatchData(testBatchIdxList, xTest);
@@ -38,7 +37,9 @@ const main = async () => {
       maxIdx(yTestBatchList[idx]) === maxIdx(yPredictList[idx])
     );
   });
-  console.log(`Accuracy for 1000 of  test data : ${accurateNum / 1000} `);
+  console.log(
+    `Accuracy for 1000 of  test data : ${(accurateNum / 1000) * 100} % `
+  );
 };
 
 main();

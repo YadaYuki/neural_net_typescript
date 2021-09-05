@@ -4,6 +4,7 @@
   "description": "typescriptプロジェクトのオリジナル初期設定",
   "scripts": {
     "dev": "ts-node src/index.ts",
+    "download:mnist":"ts-node src/download.ts",
     "dev:watch": "ts-node-dev --respawn src/index.ts",
     "build": "tsc -p .",
     "clean": "rm -rf dist",
