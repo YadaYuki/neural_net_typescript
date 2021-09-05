@@ -25,7 +25,7 @@ const donwloadMnist = async (): Promise<void> => {
       },
     });
     const gzipedData = await data.buffer();
-    zlib.gunzip(gzipedData, (err, gunzipedData) => {
+    await zlib.gunzip(gzipedData, (err, gunzipedData) => {
       if (err) throw err;
       fs.writeFileSync(
         path.join(__dirname, 'mnist', keyFiles[key as FileKey]),
@@ -119,7 +119,6 @@ export const loadMnist = async (
   } catch (e) {
     await donwloadMnist();
   }
-  // load mnist from dir
 
   const { trainLabel, testLabel } = await loadLabelData();
   let { trainImg, testImg } = await loadImageData();
