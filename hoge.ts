@@ -1,7 +1,11 @@
 import nj from 'numjs';
 
-const b = nj.array([[[[1], [2]]], [[[1], [2]]]]);
+const a = nj.array([
+  [1, 2, 4, 5, 10, 11, 13, 14],
+  [2, 3, 5, 6, 11, 12, 14, 15],
+  [4, 5, 7, 8, 13, 14, 16, 17],
+  [5, 6, 8, 9, 14, 15, 17, 18],
+]);
 
-const a = b.shape;
-console.log(a);
-
+console.log(a.slice(0, [0, 4]).tolist());
+console.log(a.slice(0, [4, 8]).tolist());

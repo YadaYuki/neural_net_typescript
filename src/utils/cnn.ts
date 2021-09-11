@@ -15,10 +15,6 @@ export const im2col = (
   const d = inputShape[1];
   const h = inputShape[2];
   const w = inputShape[3];
-  // const outputW = filterH * filterW * d;
-  // const filterOutH = (h + 2 * padding - filterH) / stride + 1;
-  // const filterOutW = (w + 2 * padding - filterW) / stride + 1;
-  // // const outputH = n * filterOutW * filterOutH;
   const inputList = input.tolist();
   const colItem: number[][] = [];
   inputList.forEach((inputItem) => {
@@ -52,27 +48,44 @@ export const col2im = (
   stride = 1,
   padding = 0
 ): nj.NdArray<number[][][]> => {
-  const { n, d, h, w } = shape;
-  const OH = h + 2 * padding - filterH / stride + 1;
-  const OW = w + 2 * padding - filterW / stride + 1;
-  const img = input.reshape(OH * OW, filterH, filterW) as nj.NdArray<
-    number[][]
-  >;
-  const imgArr = img.tolist();
-  let imgArrIdx = 0;
+  const { n: N, d: D, h: H, w: W } = shape;
+  const OH = (H + 2 * padding - filterH) / stride + 1;
+  const OW = (W + 2 * padding - filterW) / stride + 1;
+  const filterSize = filterH * filterW;
+  const filterOutputSize = OH * OW;
+  const imgArr: number[][][][][] = []; // (n,d,h,w)
+  for (let i = 0; i < N * filterOutputSize; i += filterOutputSize) {
+    const imgData: number[][][][] = []; // (d,h,w) single image
+    for (let j = 0; j < D * filterSize; j = j + filterSize) {
+      imgData.push(
+        (
+          input
+            .slice([i, i + filterOutputSize], [j, j + filterSize])
+            .reshape(OH * OW, filterH, filterW) as nj.NdArray<number[][]>
+        ).tolist()
+      );
+    }
+    imgArr.push(imgData);
+  }
   const col = (
-    nj.zeros([h, w]).reshape(n, d, h, w) as nj.NdArray<number[][][]>
+    nj.zeros([N, D, H, W]).reshape(N, D, H, W) as nj.NdArray<number[][][]>
   ).tolist();
-  for (let i = 0; i < OH; i = i + stride) {
-    for (let j = 0; j < OW; j = j + stride) {
-      const imgItem = imgArr[imgArrIdx];
-      for (let k = 0; k < filterH; k++) {
-        for (let l = 0; l < filterW; l++) {
-          col[0][0][i + k][j + l] += imgItem[k][l];
+  for (let g = 0; g < N; g++) {
+    for (let h = 0; h < D; h++) {
+      let imgArrIdx = 0;
+      for (let i = 0; i < H - filterH + 1; i = i + stride) {
+        for (let j = 0; j < W - filterW + 1; j = j + stride) {
+          const imgItem = imgArr[g][h][imgArrIdx];
+          for (let k = 0; k < filterH; k++) {
+            for (let l = 0; l < filterW; l++) {
+              col[g][h][i + k][j + l] += imgItem[k][l];
+            }
+          }
+          imgArrIdx++;
         }
       }
-      imgArrIdx++;
     }
   }
+
   return nj.array(col);
 };
