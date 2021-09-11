@@ -40,3 +40,39 @@ export const im2col = (
   });
   return nj.array(colItem);
 };
+
+/**
+ * 2次元の行列を画像のバッチデータや複数のcnnの重み行列といった4次元データに変換する。im2colと逆の効果を持つ。
+ */
+export const col2im = (
+  input: nj.NdArray<number[]>,
+  shape: { n: number; d: number; h: number; w: number }, // TODO:migrate to fixed length array
+  filterH: number,
+  filterW: number,
+  stride = 1,
+  padding = 0
+): nj.NdArray<number[][][]> => {
+  const { n, d, h, w } = shape;
+  const OH = h + 2 * padding - filterH / stride + 1;
+  const OW = w + 2 * padding - filterW / stride + 1;
+  const img = input.reshape(OH * OW, filterH, filterW) as nj.NdArray<
+    number[][]
+  >;
+  const imgArr = img.tolist();
+  let imgArrIdx = 0;
+  const col = (
+    nj.zeros([h, w]).reshape(n, d, h, w) as nj.NdArray<number[][][]>
+  ).tolist();
+  for (let i = 0; i < OH; i = i + stride) {
+    for (let j = 0; j < OW; j = j + stride) {
+      const imgItem = imgArr[imgArrIdx];
+      for (let k = 0; k < filterH; k++) {
+        for (let l = 0; l < filterW; l++) {
+          col[0][0][i + k][j + l] += imgItem[k][l];
+        }
+      }
+      imgArrIdx++;
+    }
+  }
+  return nj.array(col);
+};
