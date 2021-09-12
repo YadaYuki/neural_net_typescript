@@ -1,5 +1,6 @@
 import { Layer } from './base';
 import nj from 'numjs';
+import { im2col } from '../utils/cnn';
 
 export class Convolution implements Layer {
   W: nj.NdArray<number[][][]>;
@@ -32,6 +33,13 @@ export class Convolution implements Layer {
     return;
   }
   forwardBatch(xBatch: nj.NdArray<number[][][]>): void {
+    const [FN, C, FH, FW] = this.W.shape;
+    const [N, _, H, W] = this.x.shape;
+    const outH = Math.floor(1 + (H + 2 * this.pad - FH) / this.stride);
+    const outW = Math.floor(1 + (W + 2 * this.pad - FW) / this.stride);
+    const colX = im2col(xBatch, FH, FW, this.stride, this.pad);
+    const colW = (this.W.reshape(FN, FH * FW) as nj.NdArray<number[]>).T;
+    const out = nj.dot(colX, colW);
     return;
   }
   backward(): void {
