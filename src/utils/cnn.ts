@@ -11,17 +11,18 @@ export const im2col = (
   padding = 0
 ): nj.NdArray<number[]> => {
   const inputShape = input.shape;
-  const d = inputShape[1];
-  const h = inputShape[2];
-  const w = inputShape[3];
+  const N = inputShape[0];
+  const D = inputShape[1];
+  const H = inputShape[2];
+  const W = inputShape[3];
   const inputList = input.tolist();
   const colItem: number[][] = [];
-  inputList.forEach((inputItem) => {
-    for (let i = 0; i < h - filterH + 1; i++) {
-      for (let j = 0; j < w - filterW + 1; j++) {
+  for (let h = 0; h < N; h++) {
+    for (let i = 0; i < H - filterH + 1; i++) {
+      for (let j = 0; j < W - filterW + 1; j++) {
         const data: number[] = [];
-        for (let k = 0; k < d; k++) {
-          const inputDataCol = inputItem[k];
+        for (let k = 0; k < D; k++) {
+          const inputDataCol = inputList[h][k];
           const windowArr = inputDataCol.slice(i, i + filterH);
           windowArr.forEach((item) => {
             for (let l = j; l < j + filterW; l++) {
@@ -32,7 +33,7 @@ export const im2col = (
         colItem.push(data);
       }
     }
-  });
+  }
   return nj.array(colItem);
 };
 
