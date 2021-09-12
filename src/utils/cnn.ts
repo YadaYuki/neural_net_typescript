@@ -11,7 +11,6 @@ export const im2col = (
   padding = 0
 ): nj.NdArray<number[]> => {
   const inputShape = input.shape;
-  const n = inputShape[0];
   const d = inputShape[1];
   const h = inputShape[2];
   const w = inputShape[3];
@@ -75,10 +74,9 @@ export const col2im = (
       let imgArrIdx = 0;
       for (let i = 0; i < H - filterH + 1; i = i + stride) {
         for (let j = 0; j < W - filterW + 1; j = j + stride) {
-          const imgItem = imgArr[g][h][imgArrIdx];
           for (let k = 0; k < filterH; k++) {
             for (let l = 0; l < filterW; l++) {
-              col[g][h][i + k][j + l] += imgItem[k][l];
+              col[g][h][i + k][j + l] += imgArr[g][h][imgArrIdx][k][l];
             }
           }
           imgArrIdx++;
