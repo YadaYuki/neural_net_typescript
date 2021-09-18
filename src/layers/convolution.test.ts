@@ -10,7 +10,7 @@ describe('Convolution Layer Test', () => {
       const xBatch = nj.ones([1, 1, 5, 5]).reshape(1, 1, 5, 5) as nj.NdArray<
         number[][][]
       >; // 10枚 の 3*5*5次元の画像
-      const b = nj.arange(5);
+      const b = nj.zeros(1);
       const conv = new Convolution(W, b);
       expect(conv.forwardBatch(xBatch).tolist()).toEqual([
         [

@@ -34,13 +34,18 @@ export class Convolution implements Layer {
   }
   forwardBatch(xBatch: nj.NdArray<number[][][]>): nj.NdArray<number[][][]> {
     const [FN, C, FH, FW] = this.W.shape;
-    const [N, _, H, W] = this.x.shape;
+    const [N, _, H, W] = xBatch.shape;
     const outH = Math.floor(1 + (H + 2 * this.pad - FH) / this.stride);
     const outW = Math.floor(1 + (W + 2 * this.pad - FW) / this.stride);
     const colX = im2col(xBatch, FH, FW, this.stride, this.pad);
-    const colW = (this.W.reshape(FN, FH * FW) as nj.NdArray<number[]>).T;
-    const out = nj.dot(colX, colW);
-    return nj.zeros(0);
+    const colW = (this.W.reshape(FN, FH * FW * C) as nj.NdArray<number[]>).T;
+    const bMat = nj
+      .dot(nj.ones([outH * outW * N, 1]), this.b.reshape(1, FN))
+      .reshape(outH * outW * N, FN) as nj.NdArray<number[]>;
+    const out = nj.add(nj.dot(colX, colW), bMat);
+    return (
+      out.reshape(N, outH, outW, FN) as nj.NdArray<number[][][]>
+    ).transpose(0, 3, 1, 2);
   }
   backward(): void {
     return;
