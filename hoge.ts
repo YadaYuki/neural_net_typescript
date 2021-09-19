@@ -9,3 +9,10 @@ const a = nj.array([
 
 console.log(a.slice(0, [0, 4]).tolist());
 console.log(a.slice(0, [4, 8]).tolist());
+console.log(
+  nj.array(
+    a.tolist().map((convoluteOutput) => {
+      return Math.max(...convoluteOutput);
+    })
+  )
+);

@@ -59,8 +59,6 @@ export class Convolution implements Layer {
     const [N, , H, W] = this.x.shape;
     const outH = Math.floor(1 + (H + 2 * this.pad - FH) / this.stride);
     const outW = Math.floor(1 + (W + 2 * this.pad - FW) / this.stride);
-    console.log(dout.shape);
-    console.log(outH, outW, N, FN);
     const colDout = dout
       .transpose(0, 2, 3, 1)
       .reshape(outH * outW * N, FN) as nj.NdArray<number[]>;
