@@ -10,12 +10,13 @@ export const im2col = (
   stride = 1,
   padding = 0
 ): nj.NdArray<number[]> => {
+  // TODO:strideに対応する。
   const [N, D, H, W] = input.shape;
   const inputList = input.tolist();
   const colItem: number[][] = [];
   for (let h = 0; h < N; h++) {
-    for (let i = 0; i < H - filterH + 1; i++) {
-      for (let j = 0; j < W - filterW + 1; j++) {
+    for (let i = 0; i < H - filterH + 1; i += stride) {
+      for (let j = 0; j < W - filterW + 1; j += stride) {
         const data: number[] = [];
         for (let k = 0; k < D; k++) {
           const inputDataCol = inputList[h][k];
