@@ -65,10 +65,7 @@ export class Pooling implements Layer {
     for (let i = 0; i < dout.size; i++) {
       dmax.set(i, this.argMax.get(i), doutFlattenLs[i]);
     }
-    console.log('self.arg_max.flatten():', this.argMax.flatten());
-    console.log('dmax:', dmax.tolist());
     dmax = dmax.reshape(...dout.shape, poolSize);
-    console.log('dmax:', dmax.tolist());
     const dcol = dmax.reshape(
       dmax.shape[0] * dmax.shape[1] * dmax.shape[2],
       -1
