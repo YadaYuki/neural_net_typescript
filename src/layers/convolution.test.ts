@@ -305,4 +305,31 @@ describe('Convolution Layer Test', () => {
       ]);
     });
   });
+  describe('Convolution,backward', () => {
+    test('backward', () => {
+      const W = nj.ones([1, 1, 3, 3]).reshape(1, 1, 3, 3) as nj.NdArray<
+        number[][][]
+      >;
+      const xBatch = nj.ones([1, 1, 5, 5]).reshape(1, 1, 5, 5) as nj.NdArray<
+        number[][][]
+      >; // 10枚 の 3*5*5次元の画像
+      const b = nj.zeros(1);
+      const conv = new Convolution(W, b);
+      conv.forwardBatch(xBatch);
+      const dout = nj.ones([1, 3, 3, 1]).reshape(1, 3, 3, 1) as nj.NdArray<
+        number[][][]
+      >;
+      expect(conv.backwardBatch(dout).tolist()).toEqual([
+        [
+          [
+            [1, 2, 3, 2, 1],
+            [2, 4, 6, 4, 2],
+            [3, 6, 9, 6, 3],
+            [2, 4, 6, 4, 2],
+            [1, 2, 3, 2, 1],
+          ],
+        ],
+      ]);
+    });
+  });
 });
