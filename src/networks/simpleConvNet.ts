@@ -73,4 +73,61 @@ export class SimpleConvNet {
     ];
     this.lossLayer = new SoftmaxWithLoss();
   }
+
+  /* 基本的にはバッチ学習であることを前提とする。 */
+  forward(
+    xBatch: nj.NdArray<number[][][]>,
+    tBatch: nj.NdArray<number[]>
+  ): number {
+    let scoreBatch: nj.NdArray<number[][][] | number[]> = xBatch;
+    for (const layer of this.layers) {
+      scoreBatch = layer.forwardBatch(scoreBatch);
+    }
+    const loss = this.lossLayer.forwardBatch(scoreBatch, tBatch);
+    return loss;
+  }
+  backward(): void {
+    let dout: nj.NdArray<number[] | number[][][]> =
+      this.lossLayer.backwardBatch();
+    const reversedLayers = this.layers.slice().reverse();
+    for (const layer of reversedLayers) {
+      dout = layer.backwardBatch(dout);
+    }
+  }
+  update(learningRate = 0.1): void {
+    const { dConvW, dConvB, dW1, db1, dW2, db2 } = this.gradient();
+    this.convW = this.convW.subtract(dConvW.multiply(learningRate));
+    this.convB = this.convB.subtract(dConvB.multiply(learningRate));
+    this.W1 = this.W1.subtract(dW1.multiply(learningRate));
+    this.b1 = this.b1.subtract(db1.multiply(learningRate));
+    this.W2 = this.W2.subtract(dW2.multiply(learningRate));
+    this.b2 = this.b2.subtract(db2.multiply(learningRate));
+    (this.layers[0] as Convolution).W = this.convW;
+    (this.layers[0] as Convolution).b = this.convB;
+    (this.layers[3] as Affine).W = this.W1;
+    (this.layers[3] as Affine).b = this.b1;
+    (this.layers[5] as Affine).W = this.W2;
+    (this.layers[5] as Affine).b = this.b2;
+  }
+
+  gradient(): {
+    dConvW: nj.NdArray<number[][][]>;
+    dConvB: nj.NdArray<number>;
+    dW1: nj.NdArray<number[]>;
+    db1: nj.NdArray<number>;
+    dW2: nj.NdArray<number[]>;
+    db2: nj.NdArray<number>;
+  } {
+    const conv = this.layers[0] as Convolution;
+    const affine1 = this.layers[3] as Affine;
+    const affine2 = this.layers[5] as Affine;
+    return {
+      dConvW: conv.dW,
+      dConvB: conv.db,
+      dW1: affine1.dW,
+      db1: affine1.db,
+      dW2: affine2.dW,
+      db2: affine2.db,
+    };
+  }
 }
