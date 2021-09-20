@@ -1,4 +1,4 @@
-import { TwoLayerNet } from './twoLayerNeuralnet';
+import { TwoLayerNet } from './networks/twoLayerNeuralnet';
 import { loadMnist } from './data/load-mnist';
 import { choice, getBatchData, maxIdx } from './utils';
 
