@@ -24,7 +24,6 @@
 - node=12.15.0
 ### Setup
 ```
-
 # Install dependencies
 $ yarn install
 

@@ -8,6 +8,7 @@ export class Affine implements Layer {
   db: nj.NdArray<number>;
   x: nj.NdArray<number>;
   xBatch: nj.NdArray<number[]>;
+  xShape: number[];
   constructor(
     W: nj.NdArray<number[]>,
     b: nj.NdArray<number>,
@@ -20,6 +21,7 @@ export class Affine implements Layer {
     this.db = nj.zeros(0);
     this.x = x;
     this.xBatch = xBatch;
+    this.xShape = xBatch.shape;
   }
 
   /*
@@ -32,15 +34,18 @@ export class Affine implements Layer {
     return nj.add(nj.dot(xMat, this.W), bMat).flatten();
   }
 
-  forwardBatch(xBatch: nj.NdArray<number[]>): nj.NdArray<number[]> {
-    this.xBatch = xBatch;
+  forwardBatch(
+    xBatch: nj.NdArray<number[] | number[][][]>
+  ): nj.NdArray<number[]> {
+    this.xShape = xBatch.shape;
+    this.xBatch = xBatch.reshape(this.xShape[0], -1) as nj.NdArray<number[]>;
     const batchSize = xBatch.shape[0];
     const bMat = this.b.reshape(1, this.b.size) as nj.NdArray<number[]>;
     const ones = nj.ones(batchSize).reshape(batchSize, 1) as nj.NdArray<
       number[]
     >;
     const bMatAdd = nj.dot(ones, bMat);
-    return nj.dot(xBatch, this.W).add(bMatAdd);
+    return nj.dot(this.xBatch, this.W).add(bMatAdd);
   }
 
   backward(dout: nj.NdArray<number>): nj.NdArray<number> {
@@ -54,7 +59,9 @@ export class Affine implements Layer {
       .flatten();
   }
 
-  backwardBatch(dout: nj.NdArray<number[]>): nj.NdArray<number[]> {
+  backwardBatch(
+    dout: nj.NdArray<number[]>
+  ): nj.NdArray<number[] | number[][][]> {
     const batchSize = this.xBatch.shape[0];
     this.db = nj
       .dot(
@@ -63,6 +70,7 @@ export class Affine implements Layer {
       )
       .flatten();
     this.dW = nj.dot(this.xBatch.T, dout);
-    return nj.dot(dout, this.W.T);
+    const dx = nj.dot(dout, this.W.T);
+    return dx.reshape(...this.xShape);
   }
 }
