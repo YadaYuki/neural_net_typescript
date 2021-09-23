@@ -17,9 +17,9 @@ export class SimpleConvNet {
   layers: Layer[];
   lossLayer: Layer;
   constructor(
-    inputDim = { C: 1, Y: 28, X: 28 },
-    convParam = { filterNum: 30, filterSize: 5, pad: 0, stride: 1 },
-    poolingParam = { poolH: 2, poolW: 2, pad: 0, stride: 1 },
+    inputDim = { C: 1, Y: 28, X: 28 } as const,
+    convParam = { filterNum: 30, filterSize: 5, pad: 0, stride: 1 } as const,
+    poolingParam = { poolH: 2, poolW: 2, pad: 0, stride: 2 } as const,
     hiddenSize = 100,
     outputSize = 10,
     weightInitStd = 0.01
