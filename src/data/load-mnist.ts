@@ -103,15 +103,15 @@ const loadImageData = async (): Promise<{
   };
 };
 
-export const loadMnist = async (
+export async function loadMnist<T extends 'array' | 'image'>(
   normalize = true,
   imageFmt: 'array' | 'image' = 'array'
 ): Promise<{
-  xTrain: nj.NdArray<number[] | number[][][]>;
-  yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
-  xTest: nj.NdArray<number[] | number[][][]>;
+  xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
+  yTrain: nj.NdArray<number[]>;
+  xTest: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
   yTest: nj.NdArray<number[]>;
-}> => {
+}> {
   const filenameArr = Object.values(keyFiles);
   try {
     for (const filename of filenameArr) {
@@ -131,12 +131,15 @@ export const loadMnist = async (
   }
   if (imageFmt === 'image') {
     return {
-      xTrain: trainImg.reshape(trainSize, 1, 28, 28) as nj.NdArray<
-        number[][][]
-      >,
+      xTrain: trainImg.reshape(trainSize, 1, 28, 28),
       yTrain: trainLabel,
-      xTest: testImg.reshape(testSize, 1, 28, 28) as nj.NdArray<number[][][]>,
+      xTest: testImg.reshape(testSize, 1, 28, 28),
       yTest: testLabel,
+    } as {
+      xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
+      yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
+      xTest: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
+      yTest: nj.NdArray<number[]>;
     };
   }
   return {
@@ -144,5 +147,10 @@ export const loadMnist = async (
     yTrain: trainLabel,
     xTest: testImg,
     yTest: testLabel,
+  } as {
+    xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
+    yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
+    xTest: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
+    yTest: nj.NdArray<number[]>;
   };
-};
+}
