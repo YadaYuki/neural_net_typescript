@@ -1,4 +1,4 @@
-import { TwoLayerNet } from './networks/twoLayerNeuralnet';
+// import { TwoLayerNet } from './networks/twoLayerNeuralnet';
 import { loadMnist } from './data/load-mnist';
 import { choice, getBatchData, maxIdx } from './utils';
 import { SimpleConvNet } from './networks/simpleConvNet';
@@ -45,7 +45,6 @@ import { SimpleConvNet } from './networks/simpleConvNet';
 
 const mainCnn = async () => {
   const { xTrain, yTrain } = await loadMnist(true, 'image');
-
   const network = new SimpleConvNet();
   const trainNum = xTrain.shape[0];
   const batchSize = 100;

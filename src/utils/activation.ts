@@ -4,10 +4,7 @@ export const softmax = (x: nj.NdArray<number>): nj.NdArray<number> => {
   x = x.add(-x.max());
   return nj.divide(nj.exp(x), x.exp().sum());
 };
-/*
- @description 
-  
-*/
+
 export const softmaxBatch = (
   xBatch: nj.NdArray<number[]>
 ): nj.NdArray<number[]> => {
