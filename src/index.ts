@@ -3,9 +3,10 @@ import { loadMnist } from './data/load-mnist';
 import { choice, getBatchData, maxIdx } from './utils';
 import { SimpleConvNet } from './networks/simpleConvNet';
 
-const main = async () => {
-  const { xTrain, yTrain, yTest, xTest } = await loadMnist<'array'>();
+const trainTwoLayerNeuralNet = async () => {
+  console.log('Learn TwoLayer Neural Network...');
 
+  const { xTrain, yTrain, yTest, xTest } = await loadMnist<'array'>();
   const network = new TwoLayerNet(784, 50, 10);
   const trainNum = xTrain.shape[0];
   const batchSize = 100;
@@ -43,7 +44,8 @@ const main = async () => {
   );
 };
 
-const mainCnn = async () => {
+const trainCnn = async () => {
+  console.log('Learn Convolutional Neural Network...');
   const { xTrain, yTrain } = await loadMnist<'image'>();
   const network = new SimpleConvNet();
   const trainNum = xTrain.shape[0];
@@ -65,4 +67,22 @@ const mainCnn = async () => {
   }
 };
 
-mainCnn();
+type NetworkType = 'cnn' | 'tnn';
+
+const main = () => {
+  const arg = process.argv;
+  const networkType: NetworkType | string | undefined = arg.pop();
+  switch (networkType) {
+    case 'cnn':
+      trainCnn();
+      break;
+    case 'tnn':
+      trainTwoLayerNeuralNet();
+      break;
+    default:
+      trainTwoLayerNeuralNet();
+      break;
+  }
+};
+
+main();

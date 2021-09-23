@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "typescriptプロジェクトのオリジナル初期設定",
   "scripts": {
+    "learn":"ts-node src/index.ts tnn",
+    "learn:tnn":"ts-node src/index.ts tnn",
+    "learn:cnn":"ts-node src/index.ts cnn",
     "dev": "ts-node src/index.ts",
     "download:mnist":"ts-node src/download.ts",
     "dev:watch": "ts-node-dev --respawn src/index.ts",
