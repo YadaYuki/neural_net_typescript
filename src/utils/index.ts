@@ -15,10 +15,10 @@ export const range = (from: number, to: number, step = 1): number[] => {
   return arr;
 };
 
-export const getBatchData = (
+export const getBatchData = <T extends number[] | number[][][]>(
   idxArr: number[],
-  data: nj.NdArray<number[]>
-): nj.NdArray<number[]> => {
+  data: nj.NdArray<T>
+): nj.NdArray<T> => {
   const dataArr = data.tolist();
   return nj.array(
     idxArr.map((idx) => {

@@ -104,11 +104,12 @@ const loadImageData = async (): Promise<{
 };
 
 export const loadMnist = async (
-  normalize = true
+  normalize = true,
+  imageFmt: 'array' | 'image' = 'array'
 ): Promise<{
-  xTrain: nj.NdArray<number[]>;
-  yTrain: nj.NdArray<number[]>;
-  xTest: nj.NdArray<number[]>;
+  xTrain: nj.NdArray<number[] | number[][][]>;
+  yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
+  xTest: nj.NdArray<number[] | number[][][]>;
   yTest: nj.NdArray<number[]>;
 }> => {
   const filenameArr = Object.values(keyFiles);
@@ -122,9 +123,21 @@ export const loadMnist = async (
 
   const { trainLabel, testLabel } = await loadLabelData();
   let { trainImg, testImg } = await loadImageData();
+  const [trainSize] = trainImg.shape;
+  const [testSize] = testImg.shape;
   if (normalize) {
     trainImg = trainImg.divide(255);
     testImg = testImg.divide(255);
+  }
+  if (imageFmt === 'image') {
+    return {
+      xTrain: trainImg.reshape(trainSize, 1, 28, 28) as nj.NdArray<
+        number[][][]
+      >,
+      yTrain: trainLabel,
+      xTest: testImg.reshape(testSize, 1, 28, 28) as nj.NdArray<number[][][]>,
+      yTest: testLabel,
+    };
   }
   return {
     xTrain: trainImg,
