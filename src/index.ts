@@ -6,7 +6,7 @@ import { SimpleConvNet } from './networks/simpleConvNet';
 const trainTwoLayerNeuralNet = async () => {
   console.log('Learn TwoLayer Neural Network...');
 
-  const { xTrain, yTrain, yTest, xTest } = await loadMnist<'array'>();
+  const { xTrain, yTrain, yTest, xTest } = await loadMnist('array');
   const network = new TwoLayerNet(784, 50, 10);
   const trainNum = xTrain.shape[0];
   const batchSize = 100;
@@ -46,7 +46,7 @@ const trainTwoLayerNeuralNet = async () => {
 
 const trainCnn = async () => {
   console.log('Learn Convolutional Neural Network...');
-  const { xTrain, yTrain } = await loadMnist<'image'>();
+  const { xTrain, yTrain } = await loadMnist('image');
   const network = new SimpleConvNet();
   const trainNum = xTrain.shape[0];
   const batchSize = 100;
