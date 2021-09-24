@@ -6,7 +6,7 @@ import { SimpleConvNet } from './networks/simpleConvNet';
 const trainTwoLayerNeuralNet = async () => {
   console.log('Learn TwoLayer Neural Network...');
 
-  const { xTrain, yTrain, yTest, xTest } = await loadMnist<'array'>();
+  const { xTrain, yTrain, yTest, xTest } = await loadMnist('array');
   const network = new TwoLayerNet(784, 50, 10);
   const trainNum = xTrain.shape[0];
   const batchSize = 100;
@@ -46,12 +46,13 @@ const trainTwoLayerNeuralNet = async () => {
 
 const trainCnn = async () => {
   console.log('Learn Convolutional Neural Network...');
-  const { xTrain, yTrain } = await loadMnist<'image'>();
+  const { xTrain, yTrain } = await loadMnist('image');
   const network = new SimpleConvNet();
   const trainNum = xTrain.shape[0];
   const batchSize = 100;
   const iterNums = 1000;
   const learningRate = 0.1;
+  let from = Date.now();
   for (let i = 0; i < iterNums; i++) {
     const batchIdxList = choice(trainNum, batchSize);
     const xBatch = getBatchData(batchIdxList, xTrain);
@@ -60,9 +61,11 @@ const trainCnn = async () => {
     network.backward(); // 逆伝搬
     network.update(learningRate); // パラメータの更新
     if (i % 100 === 0) {
+      const to = Date.now();
       console.log(`iteration: ${i + 1}`);
       console.log(loss); // 誤差関数の出力結果を表示.
-      console.log();
+      console.log(to - from);
+      from = to;
     }
   }
 };

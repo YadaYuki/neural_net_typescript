@@ -104,8 +104,8 @@ const loadImageData = async (): Promise<{
 };
 
 export async function loadMnist<T extends 'array' | 'image'>(
-  normalize = true,
-  imageFmt: 'array' | 'image' = 'array'
+  imageFmt = 'array' as T,
+  normalize = true
 ): Promise<{
   xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
   yTrain: nj.NdArray<number[]>;
@@ -135,22 +135,12 @@ export async function loadMnist<T extends 'array' | 'image'>(
       yTrain: trainLabel,
       xTest: testImg.reshape(testSize, 1, 28, 28),
       yTest: testLabel,
-    } as {
-      xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
-      yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
-      xTest: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
-      yTest: nj.NdArray<number[]>;
     };
   }
   return {
-    xTrain: trainImg,
+    xTrain: trainImg as nj.NdArray<T extends 'array' ? number[] : number[][][]>,
     yTrain: trainLabel,
-    xTest: testImg,
+    xTest: testImg as nj.NdArray<T extends 'array' ? number[] : number[][][]>,
     yTest: testLabel,
-  } as {
-    xTrain: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
-    yTrain: nj.NdArray<number[]>; // TODO: imageFmtに応じて動的に２次元か4次元かを決定する.inferとか使うと良さそう？ これ勉強がてら絶対やる。
-    xTest: nj.NdArray<T extends 'array' ? number[] : number[][][]>;
-    yTest: nj.NdArray<number[]>;
   };
 }
